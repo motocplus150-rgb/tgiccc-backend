@@ -82,6 +82,91 @@ exports.sendIncidentAlert = async (incident, adminEmails) => {
     });
 };
 
+// Access request notification to admin
+exports.sendAccessRequestEmail = async (request) => {
+    await sendEmail({
+        to: process.env.EMAIL_USER,
+        subject: `[Access Request] ${request.name} - ${request.employeeId}`,
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e27; color: #e0e0e0; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #0047AB, #00D9FF); padding: 30px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 24px;">🏛️ TGiCCC Portal</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0;">New Access Request</p>
+            </div>
+            <div style="padding: 30px;">
+                <h2 style="color: #00D9FF;">New Staff Access Request</h2>
+                <p>A new access request has been submitted and is awaiting your review.</p>
+                <div style="background: rgba(0,71,171,0.2); border: 1px solid #0047AB; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0;"><strong>Name:</strong> ${request.name}</p>
+                    <p style="margin: 8px 0 0;"><strong>Employee ID:</strong> ${request.employeeId}</p>
+                    <p style="margin: 8px 0 0;"><strong>Email:</strong> ${request.email}</p>
+                    <p style="margin: 8px 0 0;"><strong>Phone:</strong> ${request.phone}</p>
+                    <p style="margin: 8px 0 0;"><strong>Department:</strong> ${request.department}</p>
+                    <p style="margin: 8px 0 0;"><strong>Designation:</strong> ${request.designation || 'Not specified'}</p>
+                </div>
+                <p>Please log in to the admin panel to approve or reject this request.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 16px; text-align: center; font-size: 12px; color: #888;">
+                © 2024 TGiCCC | Government of Telangana | Banjara Hills, Hyderabad
+            </div>
+        </div>`
+    });
+};
+
+// Access approved email to staff
+exports.sendAccessApprovedEmail = async (request, tempPassword) => {
+    await sendEmail({
+        to: request.email,
+        subject: 'TGiCCC Portal Access Approved',
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e27; color: #e0e0e0; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #0047AB, #00D9FF); padding: 30px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 24px;">🏛️ TGiCCC Portal</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0;">Access Approved</p>
+            </div>
+            <div style="padding: 30px;">
+                <h2 style="color: #00E676;">✅ Your Access Has Been Approved!</h2>
+                <p>Dear ${request.name}, your request to access the TGiCCC Portal has been approved.</p>
+                <div style="background: rgba(0,71,171,0.2); border: 1px solid #0047AB; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0;"><strong>Employee ID:</strong> ${request.employeeId}</p>
+                    <p style="margin: 8px 0 0;"><strong>Temporary Password:</strong> ${tempPassword}</p>
+                </div>
+                <p style="color: #ff9800;">⚠️ Please log in and change your password immediately.</p>
+                <p style="color: #ff9800;">⚠️ Keep your credentials confidential. Do not share with anyone.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 16px; text-align: center; font-size: 12px; color: #888;">
+                © 2024 TGiCCC | Government of Telangana | Banjara Hills, Hyderabad
+            </div>
+        </div>`
+    });
+};
+
+// Access rejected email to staff
+exports.sendAccessRejectedEmail = async (request) => {
+    await sendEmail({
+        to: request.email,
+        subject: 'TGiCCC Portal Access Request Update',
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e27; color: #e0e0e0; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #0047AB, #00D9FF); padding: 30px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 24px;">🏛️ TGiCCC Portal</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0;">Access Request Update</p>
+            </div>
+            <div style="padding: 30px;">
+                <h2 style="color: #FF1744;">Access Request Not Approved</h2>
+                <p>Dear ${request.name}, unfortunately your request to access the TGiCCC Portal could not be approved at this time.</p>
+                <div style="background: rgba(255,23,68,0.1); border: 1px solid #FF1744; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0;"><strong>Reason:</strong> ${request.rejectReason}</p>
+                </div>
+                <p>If you believe this is an error, please contact your department head or the system administrator.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 16px; text-align: center; font-size: 12px; color: #888;">
+                © 2024 TGiCCC | Government of Telangana | Banjara Hills, Hyderabad
+            </div>
+        </div>`
+    });
+};
+
 // Notice notification email
 exports.sendNoticeEmail = async (notice, recipientEmails) => {
     await sendEmail({
