@@ -17,36 +17,14 @@ connectDB();
 const seedUsers = [
     {
         employeeId: 'ADMIN001',
-        name: 'System Admin',
-        email: 'admin@tgiccc.gov.in',
-        password: 'Admin@1234',
+        name: 'TGiCCC Administrator',
+        email: 'photoshop9011@gmail.com',
+        password: 'Admin@9011',
         role: 'admin',
-        department: 'IT Operations',
+        department: 'DAPP TGICCC',
         phone: '+91-40-2345-6789',
         designation: 'System Administrator',
-        avatar: 'SA'
-    },
-    {
-        employeeId: 'EMP001',
-        name: 'PC Ramesh Kumar',
-        email: 'emp001@tgiccc.gov.in',
-        password: 'Emp@1234',
-        role: 'employee',
-        department: 'Operations',
-        phone: '+91-40-2345-6790',
-        designation: 'Police Constable',
-        avatar: 'RK'
-    },
-    {
-        employeeId: 'SUP001',
-        name: 'Inspector Vijay Reddy',
-        email: 'sup001@tgiccc.gov.in',
-        password: 'Sup@1234',
-        role: 'supervisor',
-        department: 'Law & Order',
-        phone: '+91-40-2345-6791',
-        designation: 'Inspector of Police',
-        avatar: 'VR'
+        avatar: 'TA'
     }
 ];
 
@@ -89,18 +67,18 @@ const seedIncidents = [
 
 const seedNotices = [
     {
-        title: 'System Maintenance Scheduled',
-        content: 'Scheduled maintenance on the portal. All systems will be temporarily unavailable from 02:00 AM to 04:00 AM.',
+        title: 'Welcome to TGiCCC Portal',
+        content: 'Welcome to the Telangana Integrated Command and Control Centre staff portal. Please complete your profile and review the guidelines.',
         priority: 'high',
-        department: 'IT',
-        postedBy: 'System Admin'
+        department: 'DAPP TGICCC',
+        postedBy: 'TGiCCC Administrator'
     },
     {
-        title: 'Security Protocol Update',
-        content: 'New security protocols have been implemented. Please review the updated guidelines in your dashboard.',
+        title: 'Security Protocol',
+        content: 'All staff must use their official credentials only. Do not share passwords. Report any suspicious activity immediately.',
         priority: 'medium',
-        department: 'Security',
-        postedBy: 'Security Team'
+        department: 'DAPP TGICCC',
+        postedBy: 'TGiCCC Administrator'
     }
 ];
 
@@ -117,9 +95,7 @@ const importData = async () => {
 
         console.log('✅ Database seeded successfully!');
         console.log('\n🔑 Login Credentials:');
-        console.log('   Admin     → ID: ADMIN001  | Password: Admin@1234');
-        console.log('   Employee  → ID: EMP001    | Password: Emp@1234');
-        console.log('   Supervisor→ ID: SUP001    | Password: Sup@1234\n');
+        console.log('   Admin → ID: ADMIN001  | Password: Admin@9011\n');
         process.exit();
     } catch (error) {
         console.error('❌ Seeding failed:', error.message);
