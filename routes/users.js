@@ -37,18 +37,7 @@ router.get('/departments', async (req, res) => {
     }
 });
 
-// GET /api/users/:id  — Single user profile
-router.get('/:id', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select('-password');
-        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-        res.json({ success: true, user });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
-    }
-});
-
-// PATCH /api/users/profile  — Update own profile
+// PATCH /api/users/profile/me  — Update own profile (MUST be before /:id)
 router.patch('/profile/me', [
     body('email').optional().isEmail().withMessage('Valid email is required'),
     body('phone').optional().trim()
@@ -59,7 +48,6 @@ router.patch('/profile/me', [
     }
 
     try {
-        // Only allow updating safe fields
         const allowedFields = ['name', 'email', 'phone', 'designation', 'avatar'];
         const update = {};
         allowedFields.forEach(field => {
@@ -73,12 +61,21 @@ router.patch('/profile/me', [
     }
 });
 
+// GET /api/users/:id  — Single user profile (AFTER specific routes)
+router.get('/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
 // PATCH /api/users/:id  — Admin: update any user
 router.patch('/:id', restrictTo('admin'), async (req, res) => {
     try {
-        // Never allow password update through this route
         delete req.body.password;
-
         const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }).select('-password');
         if (!user) return res.status(404).json({ success: false, message: 'User not found' });
         res.json({ success: true, message: 'User updated', user });
